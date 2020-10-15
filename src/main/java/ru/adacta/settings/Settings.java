@@ -4,9 +4,8 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 public class Settings {
 
-    private Dotenv dotenv;
-
     private static Settings instance;
+    private Dotenv dotenv;
 
     private Settings() {
     }
@@ -16,7 +15,10 @@ public class Settings {
             synchronized (Settings.class) {
                 if (instance == null) {
                     instance = new Settings();
-                    instance.dotenv = Dotenv.load();
+                    instance.dotenv = Dotenv
+                            .configure()
+                            .ignoreIfMissing()
+                            .load();
                 }
             }
         }
@@ -35,7 +37,9 @@ public class Settings {
         return dotenv.get("WEB_SOCKET_URL", "ws://localhost:8000/ws");
     }
 
-
+    public String BENCHMARKS_FILENAME() {
+        return dotenv.get("BENCHMARKS_FILENAME", "./benchmarks/benchmarks.json");
+    }
 
 
 }

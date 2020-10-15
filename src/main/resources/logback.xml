@@ -1,0 +1,86 @@
+<configuration>
+
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern> %d{yyyy-MM-dd HH:mm:ss} %green([%thread]) %highlight(%-5level) %logger{36} - %msg%n </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="stdout-report" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>log/debug.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>log/archived/debug.%d{yyyy-MM-dd-HH-mm}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>3GB</totalSizeCap>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>3MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss}[%thread]%-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="file-report" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>log/report.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>log/archived/debug.%d{yyyy-MM-dd-HH-mm}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>3GB</totalSizeCap>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>3MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder>
+            <pattern>%msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Send logs to both console and file audit -->
+    <logger name="commonLogger" level="debug" additivity="false">
+        <appender-ref ref="stdout"/>
+        <appender-ref ref="file"/>
+    </logger>
+
+    <logger name="ru.adacta.nats.Nats" level="debug" additivity="false">
+        <appender-ref ref="stdout"/>
+        <appender-ref ref="file"/>
+    </logger>
+
+    <logger name="ru.adacta.sdk.SdkFacade" level="debug" additivity="false">
+        <appender-ref ref="stdout"/>
+        <appender-ref ref="file"/>
+    </logger>
+
+    <logger name="ru.adacta.chat.Chat" level="debug" additivity="false">
+        <appender-ref ref="stdout"/>
+        <appender-ref ref="file"/>
+    </logger>
+
+    <logger name="ru.adacta.nats.impl.ClientOperatorChatBenchmark" level="debug" additivity="false">
+        <appender-ref ref="stdout"/>
+        <appender-ref ref="file"/>
+    </logger>
+
+    <logger name="ru.adacta.benchmark.impl.BenchmarkReporterImpl" level="debug" additivity="false">
+        <appender-ref ref="stdout-report"/>
+        <appender-ref ref="file-report"/>
+    </logger>
+
+    <logger name="ru.adacta.benchmark.BenchmarkFileLoader" level="debug" additivity="false">
+        <appender-ref ref="stdout"/>
+        <appender-ref ref="file"/>
+    </logger>
+
+    <root level="debug">
+        <appender-ref ref="stdout"/>
+    </root>
+
+
+</configuration>

@@ -1,0 +1,61 @@
+version: '3'
+
+services:
+
+  loading-test:
+    network_mode: host
+    build: .
+    image: docker.adacta.ru/chat-loading-test:1.0.0
+    depends_on:
+      - redis
+      - nats
+      - users
+      - chats
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ./log:/home/app/log
+      - ./benchmarks:/home/app/benchmarks
+
+  redis:
+    network_mode: host
+    image: redis:3.2-alpine
+    expose:
+      - 6379
+    restart: always
+
+  nats:
+    network_mode: host
+    image: nats:latest
+    expose:
+      - 4222
+    restart: always
+
+  users:
+    network_mode: host
+    build: ../users
+    depends_on:
+      - nats
+    env_file:
+      - ../users/.env
+    volumes:
+      - ../users/app:/var/www
+      - profile:/var/profile
+    restart: always
+
+  chats:
+    network_mode: host
+    build: ../chats
+    depends_on:
+      - redis
+      - nats
+    env_file:
+      - ../chats/.env
+    ports:
+      - 8086-8087:8000
+    restart: always
+
+volumes:
+  profile:
+    external: true

@@ -1,6 +1,8 @@
 package ru.adacta.nats;
 
 import io.nats.client.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.adacta.settings.Settings;
 
 import java.nio.charset.StandardCharsets;
@@ -15,6 +17,8 @@ import java.util.stream.Collectors;
 
 public class Nats {
 
+    private static final Logger logger = LoggerFactory.getLogger(Nats.class);
+
     public static Connection connect() throws Exception {
 
         Options.Builder builder = new Options.Builder().
@@ -26,20 +30,20 @@ public class Nats {
                 noReconnect().
                 errorListener(new ErrorListener() {
                     public void exceptionOccurred(Connection conn, Exception exp) {
-                        //  logger.error("Exception " + exp.getMessage());
+                        logger.error("Exception:" + exp.getMessage());
                     }
 
                     public void errorOccurred(Connection conn, String type) {
-                        //logger.error("Error " + type);
+                        logger.error("Error:" + type);
                     }
 
                     public void slowConsumerDetected(Connection conn, Consumer consumer) {
-                        //logger.error("Slow consumer");
+                        logger.error("Slow consumer:" + consumer.getClass().getName());
                     }
                 }).
                 connectionListener(new ConnectionListener() {
                     public void connectionEvent(Connection conn, Events type) {
-                        //logger.info("Status change " + type);
+                        logger.info("Status changed:" + type.toString());
                     }
                 });
 
@@ -78,7 +82,7 @@ public class Nats {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(String.format("Error: %s", e.getMessage()), e);
         } finally {
             executorService.shutdown();
         }
@@ -95,7 +99,7 @@ public class Nats {
                 response = request(c, subject, message);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(String.format("Error: %s", e.getMessage()), e);
         }
 
         return response;
@@ -107,17 +111,14 @@ public class Nats {
 
         try {
 
-            //logger.info(String.format("Sending message for %s subject....\n", subject));
-
-            System.out.printf("[nats request]. topic: %s \n, message: %s \n", subject, message);
+            logger.info(String.format("request: topic: %s \n, message: %s \n", subject, message));
 
             Message msg = c.request(subject, message.getBytes(StandardCharsets.UTF_8), Duration.ofSeconds(10));
             result = new String(msg.getData(), StandardCharsets.UTF_8);
-            System.out.printf("response: %s \n", result);
+            logger.info(String.format("response: %s \n", result));
 
-        } catch (Exception exp) {
-            //logger.error(exp.toString());
-            exp.printStackTrace();
+        } catch (Exception e) {
+            logger.error(String.format("Error: %s", e.getMessage()), e);
         }
 
         return result;

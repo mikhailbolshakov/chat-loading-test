@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Benchmark-1",
+    "chatsNumber": 10,
+    "messageExchangeCyclesNumber": 10,
+    "messageIntervalMillis": 5,
+    "latchTimeout": 30
+  },
+  {
+    "name": "Benchmark-1",
+    "chatsNumber": 15,
+    "messageExchangeCyclesNumber": 10,
+    "messageIntervalMillis": 5,
+    "latchTimeout": 30
+  }
+]

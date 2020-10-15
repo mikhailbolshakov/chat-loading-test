@@ -4,8 +4,8 @@ plugins {
 
 apply plugin: 'idea'
 
-group 'ru.mikhailb'
-version '1.0-SNAPSHOT'
+group 'ru.adacta'
+version '1.0.0'
 
 repositories {
     mavenCentral()
@@ -20,13 +20,17 @@ dependencies {
     compile 'com.neovisionaries:nv-websocket-client:2.10'
     compile 'io.github.cdimascio:dotenv-java:2.1.0'
     compile 'io.bretty:console-table-builder:1.2'
+    compile 'ch.qos.logback:logback-core:1.2.3'
+    compile 'ch.qos.logback:logback-classic:1.2.3'
+    compile 'org.slf4j:slf4j-api:1.7.30'
+    compile group: 'commons-io', name: 'commons-io', version: '2.6'
 
 }
 
 jar {
     manifest {
         attributes(
-                'Main-Class': 'ru.mikhailb.main',
+                'Main-Class': 'ru.adacta.main',
                 'Class-Path': configurations.runtime.files.collect { "lib/$it.name" }.join(' '),
                 'Implementation-Version': project.version
         )

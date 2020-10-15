@@ -14,13 +14,8 @@ public interface Benchmark {
     BenchmarkResult run();
 
     /**
-     * create analytic data based on benchmark results
-     */
-    void analytics();
-
-    /**
      * some actions needs to be done afterwards
      */
-    void finish();
+    void finalization();
 
 }

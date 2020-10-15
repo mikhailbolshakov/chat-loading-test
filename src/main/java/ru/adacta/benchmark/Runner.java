@@ -1,6 +1,6 @@
 package ru.adacta.benchmark;
 
-import ru.adacta.benchmark.impl.BenchmarkAnalyzerImpl;
+import ru.adacta.benchmark.impl.BenchmarkReporterImpl;
 import ru.adacta.benchmark.impl.ClientOperatorChatBenchmark;
 
 import java.util.List;
@@ -16,7 +16,7 @@ public class Runner {
                 .filter(r -> r.getException().isEmpty())
                 .collect(Collectors.toList());
 
-        new BenchmarkAnalyzerImpl().analyze(results);
+        new BenchmarkReporterImpl().report(results);
 
 
     }
@@ -39,7 +39,7 @@ public class Runner {
             e.printStackTrace();
             return new BenchmarkResult(null, null, e);
         } finally {
-            bm.finish();
+            bm.finalization();
         }
     }
 

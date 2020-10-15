@@ -2,20 +2,23 @@ package ru.adacta.benchmark.impl;
 
 import io.bretty.console.table.Alignment;
 import io.bretty.console.table.ColumnFormatter;
-import io.bretty.console.table.Precision;
 import io.bretty.console.table.Table;
 import lombok.AllArgsConstructor;
-import ru.adacta.benchmark.BenchmarkAnalyzer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.adacta.benchmark.BenchmarkReporter;
 import ru.adacta.benchmark.BenchmarkResult;
 import ru.adacta.chat.MessageLog;
 
 import java.util.List;
 import java.util.Map;
 
-public class BenchmarkAnalyzerImpl implements BenchmarkAnalyzer {
+public class BenchmarkReporterImpl implements BenchmarkReporter {
+
+    private static final Logger logger = LoggerFactory.getLogger(BenchmarkReporterImpl.class);
 
     @AllArgsConstructor
-    private class BenchmarkAnalyze {
+    private class BenchmarkReportData {
         public long sent;
         public long received;
         public long lost;
@@ -23,7 +26,7 @@ public class BenchmarkAnalyzerImpl implements BenchmarkAnalyzer {
         public double avgTime;
     }
 
-    private BenchmarkAnalyze analyzeOne(BenchmarkResult result) {
+    private BenchmarkReportData reportOne(BenchmarkResult result) {
 
         Map<String, MessageLog> messageLog = result.getMessages();
 
@@ -49,12 +52,7 @@ public class BenchmarkAnalyzerImpl implements BenchmarkAnalyzer {
         long sent = messageLog.entrySet().stream().filter(a -> a.getValue().getSendTimeMillis() > 0).count();
         long received = messageLog.entrySet().stream().filter(a -> a.getValue().getReceivedTimeMillis() > 0).count();
 
-        //System.out.printf("Average sent-received time: %f (s) \n", (time / receivedMessages) / 1000.0 );
-        //System.out.printf("Start time: %d, finish time: %d, lapse: %f (s), messages: %d, received: %d \n", startTime, finishTime, (float) (finishTime - startTime) / 1000, numberOfMessages, receivedMessages);
-        //System.out.printf("Messages per seconds: %f \n", receivedMessages / totalSec);
-        //System.out.printf("Lost: %d \n", numberOfMessages - receivedMessages);
-
-        return new BenchmarkAnalyze(sent, received, lost, messPerSec, avgTime);
+        return new BenchmarkReportData(sent, received, lost, messPerSec, avgTime);
 
 /*
         try {
@@ -78,14 +76,14 @@ public class BenchmarkAnalyzerImpl implements BenchmarkAnalyzer {
     }
 
     @Override
-    public void analyze(List<BenchmarkResult> benchmarkResults) {
+    public void report(List<BenchmarkResult> benchmarkResults) {
 
         String[] header = {"Benchmark", "chats", "cycles", "sent", "received", "lost", "mess/sec", "avg time"};
         String[][] data = new String[benchmarkResults.size()][8];
 
         for(int i = 0; i < benchmarkResults.size(); i++) {
             BenchmarkResult res = benchmarkResults.get(i);
-            BenchmarkAnalyze analyze = analyzeOne(res);
+            BenchmarkReportData analyze = reportOne(res);
 
             data[i][0] = res.getInputParams().getName();
             data[i][1] = String.valueOf(res.getInputParams().getChatsNumber());
@@ -101,7 +99,7 @@ public class BenchmarkAnalyzerImpl implements BenchmarkAnalyzer {
         ColumnFormatter<String> cf = ColumnFormatter.text(Alignment.RIGHT, 15);
         Table table = Table.of(header, data, cf);
 
-        System.out.println(table);
+        logger.info(String.format("%s\n", table));
 
     }
 }

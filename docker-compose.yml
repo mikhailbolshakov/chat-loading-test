@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+
+  loading-test:
+    network_mode: host
+    build: .
+    image: docker.adacta.ru/chat-loading-test:1.0.0
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ./log:/home/app/log
+      - ./benchmarks:/home/app/benchmarks

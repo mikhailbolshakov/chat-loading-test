@@ -1,6 +1,8 @@
 package ru.adacta.sdk;
 
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.adacta.chat.Chat;
 import ru.adacta.chat.User;
 import ru.adacta.nats.Nats;
@@ -9,14 +11,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.UUID;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class SdkFacade {
 
-    private static void handleError() {
-        //{"error":{"message":"Ошибка запроса","code":1201}}
+    private static final Logger logger = LoggerFactory.getLogger(SdkFacade.class);
+
+    private static void handleError(JSONObject error) {
+        logger.error(String.format("Error: %s", error.toString()));
     }
+
+    private static final BiFunction<ArrayList<JSONObject>,String,ArrayList<JSONObject>> responseReducer = ((agg, item) -> {
+        JSONObject json = new JSONObject(item);
+        if (json.isNull("error"))
+            agg.add(json);
+        else
+            handleError(json);
+        return agg;
+    });
 
     /**
      * @param numberOfClients - how many client is supposed to be generated
@@ -49,7 +63,8 @@ public class SdkFacade {
         return Nats
                 .requestAll("users.1.0", userRequests)
                 .stream()
-                .map(json -> (new JSONObject(json)).getJSONObject("data"))
+                .reduce(new ArrayList<JSONObject>(), responseReducer, (agg, item) -> agg).stream()
+                .map(json -> json.getJSONObject("data"))
                 .map(data -> new User(data.getInt("id"),
                         data.getJSONObject("access_token").getString("token"),
                         data.getJSONArray("roles").getString(0)))
@@ -81,7 +96,8 @@ public class SdkFacade {
         List<User> users = Nats
                 .requestAll("users.1.0", userRequests)
                 .stream()
-                .map(json -> (new JSONObject(json)).getJSONObject("data"))
+                .reduce(new ArrayList<JSONObject>(), responseReducer, (agg, item) -> agg).stream()
+                .map(json -> json.getJSONObject("data"))
                 .map(data -> new User(data.getInt("id"),
                         data.getJSONObject("access_token").getString("token"),
                         "operator"))
@@ -103,7 +119,11 @@ public class SdkFacade {
                 })
                 .collect(Collectors.toList());
 
-        Nats.requestAll("users.1.0", rolesRequests);
+        Nats
+                .requestAll("users.1.0", rolesRequests)
+                .stream()
+                .reduce(new ArrayList<JSONObject>(), responseReducer, (agg, item) -> agg)
+                .forEach(a -> {});
 
         return users;
 
@@ -130,7 +150,8 @@ public class SdkFacade {
         List<Chat> chats = Nats
                 .requestAll("chats.1.0", chatRequests)
                 .stream()
-                .map(json -> (new JSONObject(json)).getJSONObject("data"))
+                .reduce(new ArrayList<JSONObject>(), responseReducer, (agg, item) -> agg).stream()
+                .map(json -> json.getJSONObject("data"))
                 .map(data -> new Chat(data.getInt("chat_id")))
                 .collect(Collectors.toList());
 
@@ -167,30 +188,12 @@ public class SdkFacade {
             chat.setOperator(operator);
         }
 
-        Nats.requestAll("chats.1.0", subscribeRequests);
+        Nats
+                .requestAll("chats.1.0", subscribeRequests).stream()
+                .reduce(new ArrayList<JSONObject>(), responseReducer, (agg, item) -> agg)
+                .forEach(a -> {});
 
         return chats;
-
-    }
-
-    public static void test() {
-
-        String loginBase = UUID.randomUUID().toString();
-
-        JSONObject j = new JSONObject();
-        j.put("method", "POST");
-        j.put("path", "/user/create");
-        JSONObject body = new JSONObject();
-        body.put("login", String.format("%s_%d", loginBase, 1));
-        body.put("pass", "user");
-        body.put("type", "medzdrav");
-        body.put("first_name", "User");
-        body.put("last_name", "User");
-        body.put("middle_name", "User");
-        j.put("body", body);
-
-        String response =  Nats.request("users.1.0", j.toString());
-        System.out.println(response);
 
     }
 

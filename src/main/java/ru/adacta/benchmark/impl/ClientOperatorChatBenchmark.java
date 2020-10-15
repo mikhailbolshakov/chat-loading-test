@@ -1,5 +1,7 @@
 package ru.adacta.benchmark.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.adacta.benchmark.Benchmark;
 import ru.adacta.benchmark.BenchmarkParams;
 import ru.adacta.benchmark.BenchmarkResult;
@@ -14,6 +16,8 @@ import java.util.concurrent.*;
 import java.util.stream.IntStream;
 
 public class ClientOperatorChatBenchmark implements Benchmark {
+
+    private static Logger logger = LoggerFactory.getLogger(ClientOperatorChatBenchmark.class);
 
     private BenchmarkParams params;
     private List<User> clients = null;
@@ -75,13 +79,13 @@ public class ClientOperatorChatBenchmark implements Benchmark {
 
 
             if (!latch.await(params.getLatchTimeout(), TimeUnit.SECONDS)) {
-                System.out.println("Latch timeout reached");
+                logger.debug("latch timeout");
             }
 
             return new BenchmarkResult(params, messageLog);
 
         } catch(Exception e) {
-            e.printStackTrace();
+            logger.error(String.format("Socket error: %s \n", e.getMessage()), e);
             return new BenchmarkResult(params, messageLog, e);
         } finally {
             executorService.shutdown();
@@ -91,13 +95,7 @@ public class ClientOperatorChatBenchmark implements Benchmark {
     }
 
     @Override
-    public void analytics() {
-
-
-    }
-
-    @Override
-    public void finish() {
+    public void finalization() {
         chats.forEach(Chat::closeWebSockets);
     }
 }

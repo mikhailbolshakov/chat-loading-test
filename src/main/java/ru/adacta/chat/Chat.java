@@ -8,18 +8,20 @@ import lombok.Getter;
 import lombok.Setter;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.adacta.settings.Settings;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 
 @Getter
 @Setter
 public class Chat {
+
+    private static Logger logger = LoggerFactory.getLogger(Chat.class);
+
     private int chatId;
     private User client;
     private User operator;
@@ -64,20 +66,21 @@ public class Chat {
 
                 @Override
                 public void onError(WebSocket websocket, WebSocketException cause) throws Exception {
-                    System.out.printf("socket message: %s \n", cause.getMessage());
+                    logger.error(String.format("Socket error: %s \n %s \n", cause.getMessage(), Arrays.toString(cause.getStackTrace())));
                 }
 
 
                 @Override
                 public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception {
                     System.out.printf("connected: %s \n", headers.toString());
+                    logger.info(String.format("Socket connected: %s \n", headers.toString()));
                 }
             });
 
             ws.connect();
 
         } catch (IOException | WebSocketException e) {
-            e.printStackTrace();
+            logger.error(String.format("Socket error: %s \n", e.getMessage()), e);
         }
 
         return ws;
@@ -86,7 +89,7 @@ public class Chat {
     private void processIncomingMessage(String message, int userId) {
         try {
 
-            System.out.printf("Message received %s \n", message);
+            logger.debug(String.format("Received: %s \n", message));
 
             JSONObject msg = new JSONObject(message);
 
@@ -101,13 +104,15 @@ public class Chat {
                 int messageId = msgJson.getInt("id");
                 String clientMessageId = msgJson.getString("clientMessageId");
 
-                System.out.printf("Received [%s][%d] sender: %d, message id: %d\n  %s \n", Thread.currentThread().getId(), userId, senderUserId, messageId, message);
+                logger.debug(String.format("Received. userId: %d, senderId: %d, message: %d\n ", userId, senderUserId, messageId));
 
                 if (userId != senderUserId) {
 
                     latch.countDown();
 
                     messageReceived++;
+
+                    logger.debug(String.format("Latch count: %d received: %d\n ", latch.getCount(), messageReceived));
 
                     MessageLog msgLog = messageLog.get(clientMessageId);
                     msgLog.setRecipientUserId(userId);
@@ -121,7 +126,7 @@ public class Chat {
 
 
         } catch(Exception e) {
-            e.printStackTrace();
+            logger.error(String.format("Socket error: %s \n", e.getMessage()), e);
         }
     }
 
@@ -197,7 +202,7 @@ public class Chat {
             recipientWs.sendText(j.toString());
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(String.format("Socket error: %s \n", e.getMessage()), e);
         }
     }
 
