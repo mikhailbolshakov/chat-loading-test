@@ -69,7 +69,7 @@ public class ClientOperatorChatBenchmark implements Benchmark {
                                             c.sendMessage("operator");
                                             Thread.sleep(params.getMessageIntervalMillis());
                                         } catch (Exception e) {
-                                            e.printStackTrace();
+                                            logger.error(String.format("Socket error: %s \n", e.getMessage()), e);
                                         }
 
                                     });

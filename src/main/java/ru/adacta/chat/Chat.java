@@ -72,7 +72,6 @@ public class Chat {
 
                 @Override
                 public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception {
-                    System.out.printf("connected: %s \n", headers.toString());
                     logger.info(String.format("Socket connected: %s \n", headers.toString()));
                 }
             });
