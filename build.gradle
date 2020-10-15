@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+}
+
+apply plugin: 'idea'
+
+group 'ru.mikhailb'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile group: 'io.nats', name: 'jnats', 'version': '2.6.7'
+    compile group: 'org.json', name: 'json', 'version': '20190722'
+    compile group: 'org.projectlombok', name: 'lombok', 'version': '1.18.14'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', 'version': '1.18.14'
+    compile 'com.neovisionaries:nv-websocket-client:2.10'
+    compile 'io.github.cdimascio:dotenv-java:2.1.0'
+    compile 'io.bretty:console-table-builder:1.2'
+
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'ru.mikhailb.main',
+                'Class-Path': configurations.runtime.files.collect { "lib/$it.name" }.join(' '),
+                'Implementation-Version': project.version
+        )
+    }
+    from(configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }) {}
+}
