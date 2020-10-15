@@ -1,11 +1,10 @@
-package ru.mikhailb.benchmark;
+package ru.adacta.benchmark;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import ru.mikhailb.chat.MessageLog;
+import ru.adacta.chat.MessageLog;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 

@@ -1,8 +1,8 @@
-package ru.mikhailb;
+package ru.adacta;
 
-import ru.mikhailb.benchmark.BenchmarkParams;
-import ru.mikhailb.benchmark.Runner;
-import ru.mikhailb.settings.Settings;
+import ru.adacta.benchmark.BenchmarkParams;
+import ru.adacta.benchmark.Runner;
+import ru.adacta.settings.Settings;
 
 import java.util.List;
 

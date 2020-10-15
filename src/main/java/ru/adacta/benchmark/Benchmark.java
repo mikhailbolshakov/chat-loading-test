@@ -1,6 +1,4 @@
-package ru.mikhailb.benchmark;
-
-import java.util.Optional;
+package ru.adacta.benchmark;
 
 public interface Benchmark {
 

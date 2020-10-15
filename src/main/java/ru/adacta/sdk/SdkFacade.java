@@ -1,9 +1,9 @@
-package ru.mikhailb.sdk;
+package ru.adacta.sdk;
 
 import org.json.JSONObject;
-import ru.mikhailb.chat.Chat;
-import ru.mikhailb.chat.User;
-import ru.mikhailb.nats.Nats;
+import ru.adacta.chat.Chat;
+import ru.adacta.chat.User;
+import ru.adacta.nats.Nats;
 
 import java.util.ArrayList;
 import java.util.List;

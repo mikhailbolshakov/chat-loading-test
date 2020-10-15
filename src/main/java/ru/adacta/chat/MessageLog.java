@@ -1,4 +1,4 @@
-package ru.mikhailb.chat;
+package ru.adacta.chat;
 
 import lombok.Getter;
 import lombok.Setter;

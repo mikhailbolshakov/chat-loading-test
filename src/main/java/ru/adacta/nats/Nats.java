@@ -1,7 +1,7 @@
-package ru.mikhailb.nats;
+package ru.adacta.nats;
 
 import io.nats.client.*;
-import ru.mikhailb.settings.Settings;
+import ru.adacta.settings.Settings;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;

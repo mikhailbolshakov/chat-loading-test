@@ -1,7 +1,7 @@
-package ru.mikhailb.benchmark;
+package ru.adacta.benchmark;
 
-import ru.mikhailb.benchmark.impl.BenchmarkAnalyzerImpl;
-import ru.mikhailb.benchmark.impl.ClientOperatorChatBenchmark;
+import ru.adacta.benchmark.impl.BenchmarkAnalyzerImpl;
+import ru.adacta.benchmark.impl.ClientOperatorChatBenchmark;
 
 import java.util.List;
 import java.util.stream.Collectors;

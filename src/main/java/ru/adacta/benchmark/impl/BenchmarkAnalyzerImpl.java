@@ -1,19 +1,16 @@
-package ru.mikhailb.benchmark.impl;
+package ru.adacta.benchmark.impl;
 
 import io.bretty.console.table.Alignment;
 import io.bretty.console.table.ColumnFormatter;
 import io.bretty.console.table.Precision;
 import io.bretty.console.table.Table;
 import lombok.AllArgsConstructor;
-import ru.mikhailb.benchmark.BenchmarkAnalyzer;
-import ru.mikhailb.benchmark.BenchmarkResult;
-import ru.mikhailb.chat.MessageLog;
+import ru.adacta.benchmark.BenchmarkAnalyzer;
+import ru.adacta.benchmark.BenchmarkResult;
+import ru.adacta.chat.MessageLog;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class BenchmarkAnalyzerImpl implements BenchmarkAnalyzer {
 

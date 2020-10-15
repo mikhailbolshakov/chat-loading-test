@@ -1,4 +1,4 @@
-package ru.mikhailb.settings;
+package ru.adacta.settings;
 
 import io.github.cdimascio.dotenv.Dotenv;
 

@@ -1,4 +1,4 @@
-package ru.mikhailb.benchmark;
+package ru.adacta.benchmark;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

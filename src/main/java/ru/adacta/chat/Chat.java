@@ -1,4 +1,4 @@
-package ru.mikhailb.chat;
+package ru.adacta.chat;
 
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import ru.mikhailb.settings.Settings;
+import ru.adacta.settings.Settings;
 
 import java.io.IOException;
 import java.util.HashMap;

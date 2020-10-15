@@ -1,19 +1,15 @@
-package ru.mikhailb.benchmark.impl;
+package ru.adacta.benchmark.impl;
 
-import ru.mikhailb.benchmark.Benchmark;
-import ru.mikhailb.benchmark.BenchmarkParams;
-import ru.mikhailb.benchmark.BenchmarkResult;
-import ru.mikhailb.chat.Chat;
-import ru.mikhailb.chat.MessageLog;
-import ru.mikhailb.chat.User;
-import ru.mikhailb.sdk.SdkFacade;
+import ru.adacta.benchmark.Benchmark;
+import ru.adacta.benchmark.BenchmarkParams;
+import ru.adacta.benchmark.BenchmarkResult;
+import ru.adacta.chat.Chat;
+import ru.adacta.chat.MessageLog;
+import ru.adacta.chat.User;
+import ru.adacta.sdk.SdkFacade;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.*;
 import java.util.stream.IntStream;
 
