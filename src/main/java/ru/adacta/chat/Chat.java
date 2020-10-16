@@ -14,6 +14,7 @@ import ru.adacta.settings.Settings;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 
 @Getter
@@ -179,7 +180,25 @@ public class Chat {
         message.put("type", "message");
         message.put("text", "привет");
         j.put("data", data);
-        senderSocket.sendText(j.toString());
+        String msg = j.toString();
+
+        senderSocket.sendText(msg);
+        /*
+
+        try {
+
+            CompletableFuture.runAsync(new Runnable() {
+                @Override
+                public void run() {
+                    senderSocket.sendText(msg);
+                }
+            });
+
+        } catch (Exception e) {
+            logger.error(String.format("Socket error: %s \n", e.getMessage()), e);
+        }
+*/
+        logger.debug(String.format("Sent: %s \n", msg));
 
         messageLog.put(messageId, new MessageLog(System.currentTimeMillis(), "recd", sender.getId(), Thread.currentThread().getId()));
     }
@@ -198,7 +217,18 @@ public class Chat {
             data.put("status", "read");
             data.put("chatId", getChatId());
             j.put("data", data);
-            recipientWs.sendText(j.toString());
+            String msg = j.toString();
+/*
+            CompletableFuture.runAsync(new Runnable() {
+                @Override
+                public void run() {
+                    recipientWs.sendText(msg);
+                }
+            });
+*/
+            recipientWs.sendText(msg);
+
+            logger.debug(String.format("Sent: %s \n", msg));
 
         } catch (Exception e) {
             logger.error(String.format("Socket error: %s \n", e.getMessage()), e);

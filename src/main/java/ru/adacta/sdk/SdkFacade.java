@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import ru.adacta.chat.Chat;
 import ru.adacta.chat.User;
 import ru.adacta.nats.Nats;
+import ru.adacta.settings.Settings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,7 +142,7 @@ public class SdkFacade {
                     j.put("method", "POST");
                     j.put("path", "/chats/new");
                     JSONObject body = new JSONObject();
-                    body.put("order_id", 1);
+                    body.put("order_id", Integer.valueOf(Settings.getInstance().TEST_ORDER_ID()));
                     j.put("body", body);
                     return j.toString();
                 })

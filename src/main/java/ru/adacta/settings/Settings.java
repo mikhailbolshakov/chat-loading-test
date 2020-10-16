@@ -41,5 +41,9 @@ public class Settings {
         return dotenv.get("BENCHMARKS_FILENAME", "./benchmarks/benchmarks.json");
     }
 
+    public String TEST_ORDER_ID() {
+        return dotenv.get("TEST_ORDER_ID", "0");
+    }
+
 
 }

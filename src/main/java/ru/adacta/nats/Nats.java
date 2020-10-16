@@ -112,13 +112,12 @@ public class Nats {
         try {
 
             logger.info(String.format("request: topic: %s \n, message: %s \n", subject, message));
-
             Message msg = c.request(subject, message.getBytes(StandardCharsets.UTF_8), Duration.ofSeconds(10));
             result = new String(msg.getData(), StandardCharsets.UTF_8);
             logger.info(String.format("response: %s \n", result));
 
         } catch (Exception e) {
-            logger.error(String.format("Error: %s", e.getMessage()), e);
+            logger.error(String.format("Error: %s\n subject: %s message: %s", e.getMessage(), subject, message), e);
         }
 
         return result;
