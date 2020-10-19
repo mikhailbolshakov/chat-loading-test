@@ -1,4 +1,9 @@
-FROM adoptopenjdk/openjdk11:alpine-jre
+FROM gradle:jdk11-openj9
+
+COPY . /home/app
+
 WORKDIR /home/app
-COPY build/libs/chat-loading-test-1.0.0.jar app.jar
-ENTRYPOINT ["java","-jar","app.jar"]
+
+RUN gradle build --debug
+
+ENTRYPOINT ["java","-jar","/home/app/build/libs/chat-loading-test-1.0.0.jar"]
